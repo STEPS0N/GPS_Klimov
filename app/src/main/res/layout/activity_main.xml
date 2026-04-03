@@ -34,7 +34,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView"/>
 
     <TextView
-        android:id="@id/text2"
+        android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
