@@ -1,14 +1,18 @@
 package com.example.gps_klimov;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -55,4 +59,21 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    public Boolean GetPermissionGPS() {
+        ACCESS_FINE_LOCATION = ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION);
+        ACCESS_COARSE_LOCATION = ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        return ACCESS_FINE_LOCATION == PackageManager.PERMISSION_GRANTED ||
+                ACCESS_COARSE_LOCATION == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public void OnGetGPS(View view) {
+        if (GetPermissionGPS() == false) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+    }
 }
