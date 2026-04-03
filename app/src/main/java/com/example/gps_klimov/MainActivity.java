@@ -76,4 +76,24 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (GetPermissionGPS() == false) {
+            return;
+        }
+        else {
+            _LocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    1000, 10, _LocationListener);
+            _LocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                    1000, 10, _LocationListener);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        _LocationManager.removeUpdates(_LocationListener);
+    }
 }
