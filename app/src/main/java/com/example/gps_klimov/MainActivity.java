@@ -49,11 +49,11 @@ public class MainActivity extends AppCompatActivity {
                 String message = "";
                 if (location.getProvider().equals(LocationManager.GPS_PROVIDER)) {
                     message += "\nМестоположение определено с помощью GPS: долгота - " +
-                            location.getLatitude() + " широта - " + location.getLatitude();
+                            location.getAltitude() + " широта - " + location.getLatitude();
                 }
                 if (location.getProvider().equals(LocationManager.NETWORK_PROVIDER)) {
                     message += "\nМестоположение определено с помощью интернета: долгота - " +
-                            location.getLatitude() + " широта - " + location.getLatitude();
+                            location.getAltitude() + " широта - " + location.getLatitude();
                 }
                 result.setText(message);
             }
