@@ -17,11 +17,20 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class MainActivity extends AppCompatActivity {
 
     LocationManager _LocationManager;
     int ACCESS_FINE_LOCATION;
     int ACCESS_COARSE_LOCATION;
+    double HomeLatitude = 57.98088510225732 * (Math.PI / 180);
+    double HomeLongitude = 56.28759114418027 * (Math.PI / 180);
     TextView result;
 
     @Override
@@ -46,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
         public void onLocationChanged(@NonNull Location location) {
             if (location == null) return;
             else {
+                double ThisLatitude = location.getLatitude() * (Math.PI / 180);
+                double ThisLongitude = location.getLongitude() * (Math.PI / 180);
+
+                double distance = CalculateDistance(HomeLatitude, HomeLongitude, ThisLatitude, ThisLongitude);
+
+                double time = CalculateTimeMin(distance);
+
                 String message = "";
                 if (location.getProvider().equals(LocationManager.GPS_PROVIDER)) {
                     message += "\nМестоположение определено с помощью GPS: долгота - " +
@@ -55,10 +71,29 @@ public class MainActivity extends AppCompatActivity {
                     message += "\nМестоположение определено с помощью интернета: долгота - " +
                             location.getLongitude() + " широта - " + location.getLatitude();
                 }
+
+                message += "\nРасстояние до дома: " + distance + " км.";
+                message += "\nВремя пути (6 км/ч): " + time + " мин.";
+
                 result.setText(message);
             }
         }
     };
+
+    private double CalculateDistance(double homeLatitude, double homeLongitude, double thisLatitude, double thisLongitude) {
+        var R = 6371;
+        var difLatitude = thisLatitude - homeLatitude;
+        var difLongitude = thisLongitude - homeLongitude;
+
+        var a = Math.sin(difLatitude / 2) * Math.sin(difLatitude / 2) + Math.cos(homeLatitude) * Math.cos(thisLatitude) *
+                Math.sin(difLongitude / 2) * Math.sin(difLongitude / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+
+    private double CalculateTimeMin(double distance) {
+        return (distance / 6.0) * 60;
+    }
 
     public Boolean GetPermissionGPS() {
         ACCESS_FINE_LOCATION = ActivityCompat.checkSelfPermission(
